@@ -69,5 +69,43 @@ public class HsqlDBTest {
 		ds.setUser("sa");
 		ds.setPassword("sa");
 		return ds;
-	}	
+	}
+        
+        
+        
+        
+        //Test sur findProduct
+        
+        @Test
+	public void nonExistingProductReturnsNull() throws SQLException {
+		assertNull(myObject.findProduct(151515));
+	}
+	
+	@Test
+	public void findExistingProduct() throws SQLException {		
+		Product productTest = myObject.findProduct(0);
+		assertEquals("Iron Iron", productTest.getName());
+	}
+        
+        //Test sur insertProduct
+        
+        @Test
+	public void insertProduct() throws SQLException {
+		Product productTestInsert = new Product(1000,"produitTest", 100);
+		myObject.insertProduct(productTestInsert);
+		assertEquals(productTestInsert, myObject.findProduct(1000));
+	}
+
+	@Test(expected = SQLException.class)
+	public void CantCreateTwoProductWithSameId() throws SQLException {		
+		Product existant = new Product(1, "produit Test", 10);
+		myObject.insertProduct(existant);
+	}
+
+	@Test(expected = SQLException.class)
+	public void ifPriceNegative() throws SQLException {		
+		Product productTest = new Product(100, "produit test", -10);
+		myObject.insertProduct(productTest); 
+	}
+	
 }
